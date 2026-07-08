@@ -3,203 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SALONEST | 松山市の美容師向けワークスペース検索</title>
+  <title>SALOWORK</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header class="header">
-  <div class="logo">SALONEST</div>
-  <nav>
-    <a href="#search">探す</a>
-    <a href="#map">地図</a>
-    <a href="#favorites">お気に入り</a>
-    <a href="#mypage">マイページ</a>
-  </nav>
-  <button class="login-btn">ログイン</button>
-</header>
-
-<section class="hero">
-  <div class="hero-text">
-    <p class="label">Freelance Hair Stylist Workspace</p>
-    <h1>松山市で、あなたらしく働ける美容室を探そう。</h1>
-    <p>
-      フリー美容師のための、面貸し・空き席・レンタルサロン検索サービス。
-      今日使える場所から、長期で使える仕事場まで。
-    </p>
-
-    <div class="search-panel">
-      <input type="text" value="愛媛県松山市" />
-      <select>
-        <option>料金：指定なし</option>
-        <option>〜¥2,000 / h</option>
-        <option>¥2,000〜¥3,000 / h</option>
-      </select>
-      <select>
-        <option>設備：指定なし</option>
-        <option>シャンプー台あり</option>
-        <option>セット面あり</option>
-        <option>Wi-Fiあり</option>
-      </select>
-      <button>検索する</button>
-    </div>
-  </div>
-
-  <div class="hero-card">
-    <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=900&q=80" />
+  <div class="logo" onclick="showPage('home')">
+    <span class="logo-mark">S</span>
     <div>
-      <span>今日利用可能</span>
-      <h3>Maison Matsuyama</h3>
-      <p>松山市大街道 徒歩3分</p>
+      <strong>SALOWORK</strong>
+      <small>WORKSPACE FOR STYLISTS</small>
     </div>
   </div>
-</section>
+
+  <nav class="nav-menu">
+    <button onclick="showPage('home')"><span>⌂</span>ホーム</button>
+    <button onclick="showPage('search')"><span>⌕</span>探す</button>
+    <button onclick="showPage('map')"><span>⌖</span>地図</button>
+    <button onclick="showPage('favorites')"><span>♡</span>お気に入り</button>
+    <button onclick="showPage('mypage')"><span>◌</span>マイページ</button>
+  </nav>
+</header>
 
 <main>
 
-<section id="search" class="section">
-  <div class="section-head">
-    <div>
-      <p class="label">Search</p>
-      <h2>松山市の美容室を探す</h2>
-    </div>
-    <p>検索条件：松山市 / ¥1,000〜¥5,000 / 6:00〜23:00 / シャンプー台あり</p>
-  </div>
+  <!-- ホーム -->
+  <section id="homePage" class="page active">
+    <section class="hero">
+      <p class="eyebrow">Find your best work destination</p>
+      <h1>あなたにぴったりな<br>働き方を見つける。</h1>
+      <button onclick="showPage('search')">今すぐ探す</button>
+    </section>
 
-  <div class="content-grid">
-    <aside class="filter-box">
-      <h3>検索条件</h3>
-
-      <label>エリア</label>
-      <input type="text" value="愛媛県松山市" />
-
-      <label>料金</label>
-      <select>
-        <option>¥1,000〜¥5,000 / 時間</option>
-      </select>
-
-      <label>営業時間</label>
-      <select>
-        <option>6:00〜23:00</option>
-      </select>
-
-      <label>設備</label>
-      <div class="checks">
-        <span>シャンプー台</span>
-        <span>セット面</span>
-        <span>Wi-Fi</span>
-        <span>ロッカー</span>
+    <section class="section">
+      <div class="section-head">
+        <h2>おすすめサロン</h2>
+        <button class="text-btn" onclick="showAllSalons()">すべて見る</button>
       </div>
 
-      <button class="full-btn">条件を更新</button>
-    </aside>
+      <div id="recommendList" class="recommend-list"></div>
 
-    <div class="salon-list" id="salonList"></div>
-  </div>
-</section>
-
-<section id="map" class="section beige">
-  <div class="section-head">
-    <div>
-      <p class="label">Map Search</p>
-      <h2>地図から探す</h2>
-    </div>
-  </div>
-
-  <div class="map-area">
-    <div class="fake-map">
-      <span class="map-title">松山市</span>
-      <span class="pin p1">¥2,500/h</span>
-      <span class="pin p2">¥2,200/h</span>
-      <span class="pin p3">¥2,800/h</span>
-      <span class="pin p4">¥2,300/h</span>
-    </div>
-
-    <div class="map-side-card">
-      <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=700&q=80" />
-      <span class="tag">今日利用可能</span>
-      <h3>Maison Matsuyama</h3>
-      <p>松山市大街道 徒歩3分</p>
-      <strong>¥2,500〜 / h</strong>
-      <button>詳細を見る</button>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div>
-      <p class="label">Detail</p>
-      <h2>美容室詳細</h2>
-    </div>
-  </div>
-
-  <div class="detail-layout">
-    <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=900&q=80" />
-
-    <div class="detail-info">
-      <span class="tag">今日利用可能</span>
-      <span class="tag">駅近</span>
-      <h2>Maison Matsuyama</h2>
-      <p>松山市大街道 徒歩3分</p>
-      <h3>¥2,500〜 / h</h3>
-
-      <div class="facility">
-        <span>セット面 8席</span>
-        <span>シャンプー台 3台</span>
-        <span>Wi-Fiあり</span>
-        <span>ロッカーあり</span>
-        <span>ドリンクあり</span>
-        <span>駐車場あり</span>
+      <div class="section-head area-title">
+        <h2>人気エリア</h2>
       </div>
 
-      <p>
-        落ち着いた雰囲気で、フリー美容師が集中して施術できるサロンです。
-        短時間利用から定期利用まで対応しています。
-      </p>
+      <div id="areaList" class="area-list"></div>
+    </section>
+  </section>
 
-      <button class="reserve-btn">予約する</button>
-    </div>
-  </div>
-</section>
+  <!-- 探す -->
+  <section id="searchPage" class="page">
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow dark">Search</p>
+          <h2>美容室を探す</h2>
+        </div>
+        <p id="resultCount" class="result-count"></p>
+      </div>
 
-<section id="favorites" class="section beige">
-  <div class="section-head">
-    <div>
-      <p class="label">Favorites</p>
+      <div class="search-layout">
+        <aside class="filter-box">
+          <h3>検索条件</h3>
+
+          <label>エリア</label>
+          <select id="areaFilter">
+            <option value="all">松山市全域</option>
+            <option value="大街道">大街道</option>
+            <option value="松山市駅">松山市駅</option>
+            <option value="道後">道後</option>
+            <option value="湊町">湊町</option>
+            <option value="久米">久米</option>
+          </select>
+
+          <label>料金</label>
+          <select id="priceFilter">
+            <option value="all">指定なし</option>
+            <option value="2500">¥2,500以下</option>
+            <option value="3000">¥3,000以下</option>
+            <option value="4000">¥4,000以下</option>
+          </select>
+
+          <label>設備</label>
+          <select id="facilityFilter">
+            <option value="all">指定なし</option>
+            <option value="シャンプー台">シャンプー台</option>
+            <option value="Wi-Fi">Wi-Fi</option>
+            <option value="駐車場">駐車場</option>
+          </select>
+
+          <button onclick="searchSalons()">条件で検索</button>
+        </aside>
+
+        <div id="salonList" class="salon-list"></div>
+      </div>
+    </section>
+
+    <section class="section beige">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow dark">Map Search</p>
+          <h2>地図から探す</h2>
+        </div>
+      </div>
+
+      <div class="map-layout">
+        <div id="mapBox" class="map-box"></div>
+        <div id="mapPreview" class="map-preview"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 地図単体ページ -->
+  <section id="mapPage" class="page">
+    <section class="section beige">
+      <div class="section-head">
+        <h2>地図検索</h2>
+      </div>
+
+      <div class="map-layout large">
+        <div id="mapBoxPage" class="map-box"></div>
+        <div id="mapPreviewPage" class="map-preview"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- 詳細 -->
+  <section id="detailPage" class="page">
+    <section id="detailContent" class="section"></section>
+  </section>
+
+  <!-- お気に入り -->
+  <section id="favoritesPage" class="page">
+    <section class="section">
       <h2>お気に入り</h2>
-    </div>
-  </div>
+      <div id="favoriteList" class="recommend-list"></div>
+    </section>
+  </section>
 
-  <div class="favorite-grid" id="favoriteList"></div>
-</section>
+  <!-- マイページ -->
+  <section id="mypagePage" class="page">
+    <section class="section">
+      <div class="mypage-card">
+        <div class="profile">
+          <div class="avatar">Y</div>
+          <div>
+            <h2>Yuki Tanaka</h2>
+            <p>Freelance Hair Stylist</p>
+          </div>
+        </div>
 
-<section id="mypage" class="section mypage">
-  <div>
-    <p class="label">My Page</p>
-    <h2>マイページ</h2>
-  </div>
-
-  <div class="mypage-card">
-    <h3>Yuki Tanaka</h3>
-    <p>フリーランス美容師</p>
-
-    <ul>
-      <li>予約一覧</li>
-      <li>利用履歴</li>
-      <li>お気に入り</li>
-      <li>通知設定</li>
-      <li>アカウント設定</li>
-      <li>ヘルプ</li>
-    </ul>
-  </div>
-</section>
+        <div class="menu-grid">
+          <div>予約一覧 <span>›</span></div>
+          <div>利用履歴 <span>›</span></div>
+          <div>お気に入り <span>›</span></div>
+          <div>通知設定 <span>›</span></div>
+          <div>アカウント設定 <span>›</span></div>
+          <div>ヘルプ <span>›</span></div>
+        </div>
+      </div>
+    </section>
+  </section>
 
 </main>
-
-<footer>
-  <p>© 2026 SALONEST</p>
-</footer>
 
 <script src="script.js"></script>
 </body>
