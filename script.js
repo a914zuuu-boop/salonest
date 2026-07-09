@@ -8,9 +8,8 @@ const salons = [
     time: "7:00 - 22:00",
     facilities: ["シャンプー台", "Wi-Fi"],
     tags: ["今日利用可能", "駅近", "人気"],
-    x: "46%",
-    y: "30%",
-    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=900&q=90"
+    image: "./salon1.jpg",
+    gallery: ["./salon1.jpg", "./shampoo.jpg", "./waiting.jpg", "./reception.jpg", "./staffroom.jpg"]
   },
   {
     id: 2,
@@ -21,9 +20,8 @@ const salons = [
     time: "8:00 - 21:00",
     facilities: ["シャンプー台", "Wi-Fi"],
     tags: ["駅近", "人気"],
-    x: "28%",
-    y: "44%",
-    image: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=900&q=90"
+    image: "./salon2.jpg",
+    gallery: ["./salon2.jpg", "./shampoo.jpg", "./waiting.jpg", "./reception.jpg", "./staffroom.jpg"]
   },
   {
     id: 3,
@@ -34,9 +32,8 @@ const salons = [
     time: "9:00 - 20:00",
     facilities: ["セット面", "Wi-Fi"],
     tags: ["今日利用可能", "低価格"],
-    x: "63%",
-    y: "58%",
-    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=900&q=90"
+    image: "./salon3.jpg",
+    gallery: ["./salon3.jpg", "./shampoo.jpg", "./waiting.jpg", "./reception.jpg", "./staffroom.jpg"]
   },
   {
     id: 4,
@@ -47,9 +44,8 @@ const salons = [
     time: "8:00 - 22:00",
     facilities: ["駐車場", "シャンプー台"],
     tags: ["駐車場あり", "長期利用可"],
-    x: "39%",
-    y: "72%",
-    image: "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&w=900&q=90"
+    image: "./salon4.jpg",
+    gallery: ["./salon4.jpg", "./shampoo.jpg", "./waiting.jpg", "./reception.jpg", "./staffroom.jpg"]
   }
 ];
 
@@ -62,7 +58,7 @@ const extraSalons = [
   name,
   price: [2400, 2600, 3000, 1800, 3500][index % 5],
   area: ["大街道", "松山市駅", "道後", "湊町", "久米"][index % 5],
-  address: `松山市${["大街道", "三番町", "道後", "湊町", "久米"][index % 5]} ${index + 1}-${index + 3}`,
+  address: `松山市${["大街道", "三番町", "道後", "湊町", "久米"][index % 5]} ${index + 1}-${index + 3}`
 }));
 
 const allSalons = [...salons, ...extraSalons];
@@ -70,35 +66,58 @@ let favorites = [];
 
 function showPage(page) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-
   document.getElementById(`${page}Page`).classList.add("active");
 
   if (page === "favorites") renderFavorites();
-  if (page === "map") {
-    renderMap("mapBoxPage", "mapPreviewPage");
-    showMapSalon(1, "mapPreviewPage");
-  }
+  if (page === "map") showMapSalon(1);
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function salonCard(salon, type = "small") {
-  const cls = type === "search" ? "search-card salon-card" : "salon-card";
-
+function recommendCard(salon) {
   return `
-    <article class="${cls}">
+    <article class="recommend-card" onclick="openDetail(${salon.id})">
+      <button class="recommend-heart" onclick="event.stopPropagation(); addFavorite(${salon.id})">♡</button>
       <img src="${salon.image}" alt="${salon.name}">
-      <div class="salon-body">
+
+      <div class="recommend-body">
         <div class="tags">
           ${salon.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
         </div>
+
         <h3>${salon.name}</h3>
         <p>${salon.address}</p>
         <strong>¥${salon.price.toLocaleString()}〜 / h</strong>
         <p>${salon.time}</p>
-        <div class="card-actions">
-          <button class="outline" onclick="openDetail(${salon.id})">詳細を見る</button>
-          <button onclick="addFavorite(${salon.id})">♡</button>
+
+        <div class="recommend-actions">
+          <button onclick="event.stopPropagation(); openDetail(${salon.id})">詳細</button>
+          <button onclick="event.stopPropagation(); reserveSalon(${salon.id})">予約</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function searchCard(salon) {
+  return `
+    <article class="search-card">
+      <button class="search-heart" onclick="addFavorite(${salon.id})">♡</button>
+      <img src="${salon.image}" alt="${salon.name}" onclick="openDetail(${salon.id})">
+
+      <div class="search-body">
+        <div class="tags">
+          ${salon.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+        </div>
+
+        <h3 onclick="openDetail(${salon.id})">${salon.name}</h3>
+        <p>${salon.address}</p>
+        <strong>¥${salon.price.toLocaleString()}〜 / h</strong>
+        <p>${salon.time}</p>
+
+        <div class="search-actions">
+          <button onclick="openDetail(${salon.id})">詳細</button>
+          <button onclick="reserveSalon(${salon.id})">予約</button>
         </div>
       </div>
     </article>
@@ -107,7 +126,7 @@ function salonCard(salon, type = "small") {
 
 function renderRecommend() {
   document.getElementById("recommendList").innerHTML =
-    salons.map(salon => salonCard(salon)).join("");
+    salons.map(salon => recommendCard(salon)).join("");
 }
 
 function showAllSalons() {
@@ -131,9 +150,9 @@ function filterByArea(area) {
 }
 
 function renderSearch(list = salons) {
-  document.getElementById("resultCount").textContent = `該当件数：${list.length}件`;
+  document.getElementById("resultCount").textContent = `検索結果：${list.length}件`;
   document.getElementById("salonList").innerHTML =
-    list.map(salon => salonCard(salon, "search")).join("");
+    list.map(salon => searchCard(salon)).join("");
 }
 
 function searchSalons() {
@@ -145,7 +164,6 @@ function searchSalons() {
     const areaMatch = area === "all" || salon.area === area;
     const priceMatch = price === "all" || salon.price <= Number(price);
     const facilityMatch = facility === "all" || salon.facilities.includes(facility);
-
     return areaMatch && priceMatch && facilityMatch;
   });
 
@@ -157,11 +175,23 @@ function openDetail(id) {
 
   document.getElementById("detailContent").innerHTML = `
     <div class="detail-layout">
-      <img class="detail-img" src="${salon.image}" alt="${salon.name}">
+      <div>
+        <img class="detail-img" src="${salon.image}" alt="${salon.name}" id="mainDetailImage">
+
+        <div class="detail-thumbs">
+          ${salon.gallery.map(img => `
+            <img src="${img}" onclick="changeMainImage('${img}')">
+          `).join("")}
+        </div>
+      </div>
+
       <div class="detail-info">
+        <button class="detail-favorite" onclick="addFavorite(${salon.id})">♡</button>
+
         <div class="tags">
           ${salon.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
         </div>
+
         <h2>${salon.name}</h2>
         <p>${salon.address}</p>
         <p class="price">¥${salon.price.toLocaleString()}〜 / h</p>
@@ -178,9 +208,9 @@ function openDetail(id) {
           短時間利用から定期利用まで対応できます。
         </p>
 
-        <div class="card-actions">
-          <button>予約する</button>
-          <button class="outline" onclick="addFavorite(${salon.id})">お気に入り</button>
+        <div class="detail-actions">
+          <button class="outline" onclick="showPage('search')">戻る</button>
+          <button class="reserve-main-btn" onclick="reserveSalon(${salon.id})">予約する</button>
         </div>
       </div>
     </div>
@@ -189,55 +219,62 @@ function openDetail(id) {
   showPage("detail");
 }
 
-function renderMap(mapId, previewId) {
-  const map = document.getElementById(mapId);
-
-  map.innerHTML = salons.map(salon => `
-    <button 
-      class="map-pin"
-      style="left:${salon.x}; top:${salon.y};"
-      onmouseenter="showMapSalon(${salon.id}, '${previewId}')"
-      onclick="openDetail(${salon.id})"
-    >
-      ¥${salon.price.toLocaleString()}/h
-    </button>
-  `).join("");
+function changeMainImage(imagePath) {
+  document.getElementById("mainDetailImage").src = imagePath;
 }
 
-function showMapSalon(id, previewId = "mapPreview") {
+function showMapSalon(id) {
   const salon = salons.find(s => s.id === id);
 
-  document.getElementById(previewId).innerHTML = `
-    <img src="${salon.image}" alt="${salon.name}">
-    <div class="tags">
-      ${salon.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+  document.getElementById("mapPreviewPage").innerHTML = `
+    <div class="map-card-image">
+      <img src="${salon.image}" alt="${salon.name}">
     </div>
-    <h3>${salon.name}</h3>
-    <p>${salon.address}</p>
-    <strong>¥${salon.price.toLocaleString()}〜 / h</strong>
-    <p>${salon.time}</p>
-    <div class="card-actions">
-      <button class="outline" onclick="openDetail(${salon.id})">詳細を見る</button>
-      <button onclick="addFavorite(${salon.id})">♡</button>
+
+    <div class="map-card-info">
+      <div class="tags">
+        ${salon.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+      </div>
+
+      <h3>${salon.name}</h3>
+      <p>${salon.address}</p>
+
+      <div class="map-card-meta">
+        <strong>¥${salon.price.toLocaleString()}〜 / h</strong>
+        <span>${salon.time}</span>
+      </div>
+    </div>
+
+    <div class="map-card-buttons">
+      <button class="outline" onclick="openDetail(${salon.id})">詳細</button>
+      <button onclick="reserveSalon(${salon.id})">予約</button>
     </div>
   `;
 }
 
 function addFavorite(id) {
-  if (!favorites.includes(id)) favorites.push(id);
-  alert("お気に入りに追加しました");
+  if (!favorites.includes(id)) {
+    favorites.push(id);
+    alert("お気に入りに追加しました");
+  } else {
+    alert("すでにお気に入りに入っています");
+  }
 }
 
 function renderFavorites() {
   const list = allSalons.filter(salon => favorites.includes(salon.id));
 
   document.getElementById("favoriteList").innerHTML = list.length
-    ? list.map(salon => salonCard(salon)).join("")
+    ? list.map(salon => recommendCard(salon)).join("")
     : `<div class="empty">お気に入りはまだありません。</div>`;
+}
+
+function reserveSalon(id) {
+  const salon = allSalons.find(s => s.id === id);
+  alert(`${salon.name} の予約画面へ進みます。`);
 }
 
 renderRecommend();
 renderAreas();
 renderSearch(salons);
-renderMap("mapBox", "mapPreview");
 showMapSalon(1);
