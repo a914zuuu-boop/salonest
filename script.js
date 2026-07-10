@@ -271,7 +271,8 @@ function renderFavorites() {
 
 function reserveSalon(id) {
   const salon = allSalons.find(s => s.id === id);
-  alert(`${salon.name} の予約画面へ進みます。`);
+  document.getElementById("reservationContent").innerHTML = `<h3>${salon.name}</h3><p>¥${salon.price.toLocaleString()}〜 / h</p><label>利用日</label><input type="date"><label>開始時刻</label><select id="startHour"><option value="">--時</option>${[...Array(16)].map((_, i) => `<option value="${i+7}">${i+7}時</option>`).join("")}</select><select id="startMin"><option value="">--分</option><option value="00">00分</option><option value="30">30分</option></select><label>終了時刻</label><select id="endHour"><option value="">--時</option>${[...Array(16)].map((_, i) => `<option value="${i+7}">${i+7}時</option>`).join("")}</select><select id="endMin"><option value="">--分</option><option value="00">00分</option><option value="30">30分</option></select>`;
+  showPage("reservation");
 }
 
 renderRecommend();
