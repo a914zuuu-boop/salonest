@@ -271,7 +271,7 @@ function renderFavorites() {
 
 function reserveSalon(id) {
   const salon = allSalons.find(s => s.id === id);
-  document.getElementById("reservationContent").innerHTML = `<h3>${salon.name}</h3><p>¥${salon.price.toLocaleString()}〜 / h</p>`;
+  document.getElementById("reservationContent").innerHTML = `<h3>${salon.name}</h3><p>¥${salon.price.toLocaleString()}〜 / h</p><label>利用日</label><input type="date">`;
   showPage("reservation");
 }
 
