@@ -271,7 +271,8 @@ function renderFavorites() {
 
 function reserveSalon(id) {
   const salon = allSalons.find(s => s.id === id);
-  alert(`${salon.name} の予約画面へ進みます。`);
+  document.getElementById("reservationContent").innerHTML = `<h3>${salon.name}</h3>`;
+  showPage("reservation");
 }
 
 renderRecommend();
